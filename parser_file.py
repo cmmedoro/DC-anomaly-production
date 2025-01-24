@@ -25,6 +25,7 @@ def parse_arguments():
 
     parser.add_argument("--save_checkpoint_dir", type = str, default = None, help = "Indicate folder to store model checkpoint")
     parser.add_argument("--checkpoint_dir", type = str, default = None, help = "Indicate folder to retrieve model checkpoint")
+    parser.add_argument("--onnx_checkpoint", type = str, default = None, help = "Indicate folder to save the onnx model checkpoint")
 
     parser.add_argument("--threshold", type = int, default = 4, help = "Choose a threshold for anomaly detection")
     parser.add_argument("--percentile", type = float, default = 0.95, help = "Choose a percentile for anomaly detection")
