@@ -34,7 +34,7 @@ w_size = X_train.shape[1] * X_train.shape[2]
 z_size = int(w_size * hidden_size) 
 
 if model_type == "linear_ae":
-    X_train = torch.rand(BATCH_SIZE, z_size)
+    X_train = torch.rand(BATCH_SIZE, w_size)
 else:
     X_train = torch.rand(BATCH_SIZE, train_window, 1)
 
