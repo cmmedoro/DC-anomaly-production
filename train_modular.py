@@ -114,7 +114,7 @@ if __name__ == "__main__":
     else:
         device = torch.device('cpu')
 
-    train_loader, val_loader, w_size, z_size, n_channels = prepare_dataset(dataset, train_window, BATCH_SIZE, hidden_size)
+    train_loader, val_loader, w_size, z_size, n_channels = prepare_dataset(dataset, model_type, train_window, BATCH_SIZE, hidden_size)
     train(model_type, N_EPOCHS, train_window, train_loader, val_loader, w_size, z_size, n_channels, checkpoint_path)
 
     
