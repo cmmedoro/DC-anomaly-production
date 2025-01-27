@@ -1,5 +1,6 @@
 import torch
 import parser_file as pars
+import onnx
 
 args = pars.parse_arguments()
 
@@ -29,7 +30,13 @@ train_window = args.train_window
 # Create a dummy dataset to give to the onnx model just as a placeholder for the input shapes
 X_train = torch.rand(BATCH_SIZE, train_window, 1)
 batch, window, n_channels = X_train
-w_size = w_size = X_train.shape[1] * X_train.shape[2]
+w_size = X_train.shape[1] * X_train.shape[2]
+z_size = int(w_size * hidden_size) 
+
+if model_type == "linear_ae":
+    X_train = torch.rand(BATCH_SIZE, z_size)
+else:
+    X_train = torch.rand(BATCH_SIZE, train_window, 1)
 
 if model_type == "lstm_ae" or model_type == "conv_ae" or model_type == "lstm":
     z_size = 32
@@ -67,7 +74,7 @@ onnx_file = args.onnx_checkpoint
 # Export model
 torch.onnx.export(
     model,                           # model
-    X_train,                         # dummy input
+    X_train.to(device),                         # dummy input
     onnx_file,                       # Output file name
     export_params=True,              # Export weights
     opset_version=11,                # ONNX version (>=11)
@@ -79,6 +86,15 @@ torch.onnx.export(
         "output": {0: "batch_size"}  # Output 0 axis is dynamic
     }
 )
+
+#Verify model
+
+# Carica il modello ONNX
+onnx_model = onnx.load("model.onnx")
+
+# Verifica il modello
+onnx.checker.check_model(onnx_model)
+print(onnx.helper.printable_graph(onnx_model.graph))
 """
 #Verify model
 import onnx
