@@ -2,7 +2,7 @@
 
 Unsupervised framework to perform Anomaly Detection on Energy Production Data. 
 
-Several models have been tested, three that perform reconstruction on the input time series and two that perform forecast of the next timestamp in the input sequence. The Linear Autoencoder has proven to be the best one due to its performance.
+Several models have been tested, three that perform reconstruction on the input time series and two that perform forecast of the next timestamp in the input sequence. The Linear Autoencoder has proven to be the best one due to its performance, second came the LSTM.
 
 The Unsupervised approach is necessary as there are not public datasets representing energy production data which are also annotated specifically for the task of anomaly detection.
 
@@ -17,7 +17,13 @@ The processed dataset is available [here](/data/production_ts.csv).
 To train the models launch the following command:
 
 ```
-python train.py --model_type [choose_the_preferred_model] --dataset [dataset_dir] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_path [xx] 
+python train.py --model_type [preferred_model]
+                --dataset [dataset_dir] 
+                --train_window [72] 
+                --BATCH_SIZE [128] 
+                --N_EPOCHS [200] 
+                --hidden_size [0.125] 
+                --checkpoint_path [path_to_save_checkpoint] 
 ```
 
 ## Testing
@@ -29,5 +35,17 @@ The synthetic anomalies constitute the ground truth anomalies to which the abnor
 To test the models launch the following command:
 
 ```
-python test.py --model_type [xx] --dataset [xx] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_dir [xx] --threshold_method [xx] --percentile [xx] --synth_gen [T/F] --contamination [xx] --period [xx] --anom_amplitude_factor [xx]
+python test.py --model_type [preferred_model] 
+               --dataset [dataset_dir] 
+               --train_window [72] 
+               --BATCH_SIZE [128] 
+               --N_EPOCHS [200] 
+               --hidden_size [0.125] 
+               --checkpoint_dir [path_to_checkpoint] 
+               --threshold_method [0] 
+               --percentile [97.5] 
+               --synth_gen 
+               --contamination [0.03] 
+               --period [12] 
+               --anom_amplitude_factor [0.05]
 ```
