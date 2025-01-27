@@ -65,8 +65,6 @@ def training(epochs, model, train_loader, val_loader, device, opt_func=torch.opt
 
             #Train AE
             w = model(X_batch)
-            print("Output AE: ", w.size())
-            print("GT: ", y_batch.size())
             loss = criterion(w, y_batch)
             train_loss.append(loss)
             loss.backward()
