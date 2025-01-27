@@ -42,36 +42,12 @@ class LinearAE(nn.Module):
     self.z_size = 9
     self.encoder = Encoder(w_size, self.z_size)
     self.decoder = Decoder(self.z_size, w_size) 
-  
-  def training_step(self, batch, y, criterion, n):
-    z = self.encoder(batch)
-    w = self.decoder(z)
-    loss = criterion(w, y)
-    return loss
 
-  def validation_step(self, batch, y, criterion, n):
-    with torch.no_grad():
-        z = self.encoder(batch)
-        w = self.decoder(z)
-        loss = criterion(w, y)
-    return loss
-        
-    
-  def epoch_end(self, epoch, result, result_train):
-    print("Epoch [{}], train_loss: {:.4f}, val_loss: {:.4f}".format(epoch, result_train, result))
+  def forward(self, x):
+    out = self.encoder(x)
+    out = self.decoder(out)
+    return out
 
-
-def evaluate(model, val_loader, criterion, device, n):
-    batch_loss = []
-    for X_batch, y_batch in val_loader:
-       X_batch = X_batch.to(device) 
-       y_batch = y_batch.to(device) 
-
-       loss = model.validation_step(X_batch, y_batch, criterion, n)
-       batch_loss.append(loss)
-
-    epoch_loss = torch.stack(batch_loss).mean()
-    return epoch_loss.item()
     
 
 def training(epochs, model, train_loader, val_loader, device, opt_func=torch.optim.Adam): 
@@ -80,6 +56,7 @@ def training(epochs, model, train_loader, val_loader, device, opt_func=torch.opt
     criterion = nn.MSELoss().to(device)
     for epoch in range(epochs):
         train_loss = []
+        model.train()
         for X_batch, y_batch in train_loader:
             X_batch = X_batch.to(device) 
             y_batch = y_batch.to(device) 
@@ -87,15 +64,28 @@ def training(epochs, model, train_loader, val_loader, device, opt_func=torch.opt
             optimizer.zero_grad() 
 
             #Train AE
-            loss = model.training_step(X_batch, y_batch, criterion, epoch+1)
+            w = model(X_batch)
+            print("Output AE: ", w.size())
+            print("GT: ", y_batch.size())
+            loss = criterion(w, y_batch)
             train_loss.append(loss)
             loss.backward()
             optimizer.step()           
-        result_train = torch.stack(train_loss).mean()     
-        result = evaluate(model, val_loader, criterion, device, epoch+1) 
-        model.epoch_end(epoch, result, result_train)
-        res = result_train.item()
-        history.append((res, result))
+        result_train = torch.stack(train_loss).mean().item()
+        model.eval()
+        val_loss = []
+        for X_batch, y_batch in val_loader:
+          X_batch = X_batch.to(device) 
+          y_batch = y_batch.to(device) 
+          with torch.no_grad():
+            w = model(X_batch)
+            loss = criterion(w, y_batch)
+          val_loss.append(loss)
+
+        result_val = torch.stack(val_loss).mean().item()
+
+        print("Epoch [{}], train_loss: {:.4f}, val_loss: {:.4f}".format(epoch, result_train, result_val))
+        history.append((result_train, result_val))
     return history
     
 def testing(model, test_loader, device):
