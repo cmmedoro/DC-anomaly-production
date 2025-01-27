@@ -1,6 +1,5 @@
 import torch
 import parser_file as pars
-import onnx
 
 args = pars.parse_arguments()
 
@@ -87,14 +86,6 @@ torch.onnx.export(
     }
 )
 
-#Verify model
-
-# Carica il modello ONNX
-onnx_model = onnx.load("model.onnx")
-
-# Verifica il modello
-onnx.checker.check_model(onnx_model)
-print(onnx.helper.printable_graph(onnx_model.graph))
 """
 #Verify model
 import onnx
