@@ -17,7 +17,7 @@ The processed dataset is available [here](/data/production_ts.csv).
 To train the models launch the following command:
 
 ```
-python train.py --model_type [choose_the_preferred_model] --dataset [dataset_dir] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_path [xx] --model_type [xx] --dataset [xx] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_dir [xx] --threshold_method [xx] --percentile [xx] --synth_gen [T/F] --contamination [xx] --period [xx] --anom_amplitude_factor [xx]
+python train.py --model_type [choose_the_preferred_model] --dataset [dataset_dir] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_path [xx] 
 ```
 
 ## Testing
@@ -29,5 +29,5 @@ The synthetic anomalies constitute the ground truth anomalies to which the abnor
 To test the models launch the following command:
 
 ```
-python test.py --model_type [choose_the_preferred_model] 
+python test.py --model_type [xx] --dataset [xx] --train_window [xx] --BATCH_SIZE [xx] --N_EPOCHS [xx] --hidden_size [xx] --checkpoint_dir [xx] --threshold_method [xx] --percentile [xx] --synth_gen [T/F] --contamination [xx] --period [xx] --anom_amplitude_factor [xx]
 ```
