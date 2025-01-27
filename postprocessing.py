@@ -97,7 +97,7 @@ def threshold_anom_score_perc(predicted_df_val, predicted_df_test, percentile):
    return predicted_df_test
 
 
-def anomaly_detection(predicted_df_val, predicted_df_test, method_nr, percentile, weight_overall = 0.5, k = 1.5):
+def anomaly_detection(predicted_df_val, predicted_df_test, method_nr, percentile):
   if method_nr == 0:
     predicted_df = threshold_abs_loss(predicted_df_val, percentile, predicted_df_test)
   elif method_nr == 1:

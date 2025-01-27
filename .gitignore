@@ -162,7 +162,6 @@ cython_debug/
 #.idea/
 
 checkpoints
-data
 outputs
 jobs
 pyvenv.cfg

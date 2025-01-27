@@ -145,12 +145,10 @@ else:
 
 threshold_method = args.threshold
 percentile = args.percentile
-weight_overall = args.weights_overall
-k = args.k
 
 print("Method: ", threshold_method)
 
-predicted_df_test = anomaly_detection(predicted_df_val, predicted_df_test, threshold_method, percentile, weight_overall, k)
+predicted_df_test = anomaly_detection(predicted_df_val, predicted_df_test, threshold_method, percentile)
 
 ### Parallel with synthetically generated anomalies on the data
 if args.synthetic_generation:
@@ -189,7 +187,7 @@ if args.synthetic_generation:
         df_s = get_predicted_synthetic_dataset_big(synthetic_df, r_s)
         df_val_s = get_predicted_synthetic_dataset_big(synthetic_val, r_val_s)
 
-    preds_s = anomaly_detection(df_val_s, df_s, threshold_method, percentile, weight_overall, k)
+    preds_s = anomaly_detection(df_val_s, df_s, threshold_method, percentile)
 
     print(classification_report(preds_s.synthetic_anomaly, preds_s.predicted_anomaly))
     print(roc_auc_score(preds_s.synthetic_anomaly, preds_s.predicted_anomaly))
